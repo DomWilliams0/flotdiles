@@ -73,7 +73,33 @@ class Flotdiles:
 
         :param f: A file path to a single flotdile symlink
         """
-        pass
+        f = os.path.abspath(f)
+
+        if not os.path.exists(f):
+            print("Skipping '%s', as it doesn't exist" % f)
+            return
+
+        if not os.path.islink(f):
+            print("Skipping '%s', as it isn't a flotdile symlink")
+            return
+
+        flotdile_results = filter(lambda x: x["dotfile"] == f, self.get_synced_files())
+
+        if len(flotdile_results) == 0:
+            print("Skipping '%s', as it isn't a flotdile")
+            return
+
+        if len(flotdile_results) != 1:
+            print("What? There are multiple flotdiles linking to this single file. WAT?")
+            return
+
+        src = flotdile_results[0]["flotdile"]
+
+        # replace symlink with original
+        os.remove(f)
+        shutil.move(src, f)
+
+        self._remove_synced_file(f)
 
     def get_synced_files(self):
         return self._config.get(self._SYNCED_FILE_KEY, [])
@@ -88,6 +114,12 @@ class Flotdiles:
         self._config[self._SYNCED_FILE_KEY] = all_synced
 
         print("Added flotdile for %s" % dotfile)
+
+    def _remove_synced_file(self, dotfile):
+        new_synced = filter(lambda x: x["dotfile"] != dotfile, self.get_synced_files())
+        self._config[self._SYNCED_FILE_KEY] = new_synced
+
+        print("Removed flotdile for %s" % dotfile)
 
     def save(self):
         with open(os.path.join(self.path, self.CONFIG_FILE), 'w') as config:
