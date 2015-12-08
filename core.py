@@ -16,8 +16,8 @@ def main():
     list = subparsers.add_parser("list", help="List the synced files")
 
     sync = subparsers.add_parser("sync", help="Sync with the repository")
-    sync.add_argument("-p", "--push", help="Push change to repository", action='store_true', default=argparse.SUPPRESS)
-    sync.add_argument("-P", "--pull", help="Pull changes to repository", action='store_true', default=argparse.SUPPRESS)
+    sync.add_argument("--push", help="Push change to repository", action='store_true', default=argparse.SUPPRESS)
+    sync.add_argument("--pull", help="Pull changes to repository", action='store_true', default=argparse.SUPPRESS)
     sync.add_argument("-f", "--force", help="Force sync, you savage", action='store_true', default=False)
 
     args = parser.parse_args()
