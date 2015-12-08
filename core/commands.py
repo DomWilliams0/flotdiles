@@ -18,6 +18,8 @@ def handle_command(kwargs):
     else:
         raise StandardError("Unknown command '%s'" % cmd)
 
+    flotdiles.save()
+
 
 def handle_add(kwargs):
     files = kwargs.pop('files')
