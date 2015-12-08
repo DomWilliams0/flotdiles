@@ -50,7 +50,7 @@ class Flotdiles:
     def _do_flotdile_operation(self, f, is_add):
         try:
             return self._add_flotdile(f) if is_add else self._remove_flotdile(f)
-        except StandardError as e:
+        except SkippedFileError as e:
             print("Skipping '%s' %s" % (f, e.message))
 
     def _add_flotdile(self, f):
@@ -62,10 +62,10 @@ class Flotdiles:
         f = os.path.abspath(f)
 
         if not os.path.exists(f):
-            raise StandardError("as it doesn't exist")
+            raise SkippedFileError("as it doesn't exist")
 
         if not os.path.isfile(f) or os.path.islink(f):
-            raise StandardError("as it isn't a file")
+            raise SkippedFileError("as it isn't a file")
 
         filename = os.path.basename(f)
         new_path = self.ensure_unique_file(os.path.join(self.path, filename))
@@ -86,15 +86,15 @@ class Flotdiles:
         f = os.path.abspath(f)
 
         if not os.path.exists(f):
-            raise StandardError("as it doesn't exist")
+            raise SkippedFileError("as it doesn't exist")
 
         if not os.path.islink(f):
-            raise StandardError("as it isn't a flotdile symlink")
+            raise SkippedFileError("as it isn't a flotdile symlink")
 
         flotdile = self.get_synced_files().get(f)
 
         if flotdile is None:
-            raise StandardError("as it isn't a flotdile")
+            raise SkippedFileError("as it isn't a flotdile")
 
         # replace symlink with original
         os.remove(f)
@@ -108,7 +108,7 @@ class Flotdiles:
     def _add_synced_file(self, flotdile, dotfile):
         synced = self.get_synced_files()
         if dotfile in synced:
-            raise StandardError("as there is already a flotdile for this file")
+            raise SkippedFileError("as there is already a flotdile for this file")
 
         synced[dotfile] = flotdile
 
@@ -119,7 +119,7 @@ class Flotdiles:
     def _remove_synced_file(self, dotfile):
         synced = self.get_synced_files()
         if dotfile not in synced:
-            raise StandardError("as there is not already a flotdile for this file")
+            raise SkippedFileError("as there is not already a flotdile for this file")
 
         del synced[dotfile]
         self._update_synced_files(synced)
@@ -145,3 +145,7 @@ class Flotdiles:
             i += 1
 
         return new_path
+
+
+class SkippedFileError(RuntimeError):
+    pass
