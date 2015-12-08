@@ -1,4 +1,6 @@
+from core import fsutils
 from core.flotdiles import Flotdiles
+import os
 
 flotdiles = Flotdiles()
 
@@ -21,8 +23,11 @@ def handle_command(kwargs):
 def handle_add(kwargs):
     files = kwargs.pop('files')
 
-    # todo add
-    print("Adding files %s" % files)
+    all_files = []
+    map(lambda f: all_files.extend(fsutils.get_all_files(f)), files)
+    print("Attempting to add %d file(s)" % len(all_files))
+
+    map(flotdiles.add_file, all_files)
 
 
 def handle_remove(kwargs):

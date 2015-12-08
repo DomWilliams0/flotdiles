@@ -39,12 +39,18 @@ class Flotdiles:
     def __getitem__(self, item):
         return self._config[item]
 
+    # operations
+
+    def add_file(self, file):
+        # todo
+        pass
+
+    # helpers
+    
     def __setitem__(self, key, value):
         self._config[key] = value
         # todo save config
 
-    # helpers
-    
     @property
     def synced_files(self):
         return self._config.get("syncedFiles", {})
