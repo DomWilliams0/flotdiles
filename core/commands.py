@@ -1,6 +1,5 @@
 from core import fsutils
 from core.flotdiles import Flotdiles
-import os
 
 flotdiles = Flotdiles()
 
@@ -40,7 +39,7 @@ def handle_remove(kwargs):
 def handle_list(kwargs):
     # todo list
     print("Listing files")
-    print(flotdiles.synced_files)
+    print(flotdiles.get_synced_files())
 
 
 def handle_sync(kwargs):

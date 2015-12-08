@@ -1,11 +1,6 @@
 import os
 
 
-def symlink(link, real_file):
-    # todo
-    pass
-
-
 def get_all_files(f):
     """
     :param f: File or directory
