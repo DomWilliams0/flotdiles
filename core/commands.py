@@ -1,3 +1,8 @@
+from core.flotdiles import Flotdiles
+
+flotdiles = Flotdiles()
+
+
 def handle_command(kwargs):
     cmd = kwargs.pop('subcommand')
 
@@ -30,6 +35,7 @@ def handle_remove(kwargs):
 def handle_list(kwargs):
     # todo list
     print("Listing files")
+    print(flotdiles.synced_files)
 
 
 def handle_sync(kwargs):
