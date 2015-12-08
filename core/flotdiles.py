@@ -41,11 +41,20 @@ class Flotdiles:
 
     # operations
 
-    def add_file(self, f):
+    def add_flotdile(self, f):
+        """
+        Adds a flotdile for the given file, by replacing it with a symlink to the flotdile directory
+
+        :param f: A single file path
+        """
         f = os.path.abspath(f)
 
         if not os.path.exists(f):
             print("Skipping '%s', as it doesn't exist" % f)
+            return
+
+        if not os.path.isfile(f):
+            print("Skipping '%s', as it isn't a file")
             return
 
         filename = os.path.basename(f)
@@ -57,6 +66,14 @@ class Flotdiles:
 
         # add to config
         self._add_synced_file(new_path, f)
+
+    def remove_flotdile(self, f):
+        """
+        Removes the given file from the flotdiles, by replacing its symlink with the original file
+
+        :param f: A file path to a single flotdile symlink
+        """
+        pass
 
     def get_synced_files(self):
         return self._config.get(self._SYNCED_FILE_KEY, [])
