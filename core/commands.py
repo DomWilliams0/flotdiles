@@ -1,3 +1,5 @@
+import os
+
 from core import fsutils
 from core.flotdiles import Flotdiles
 
@@ -25,11 +27,12 @@ def handle_add_remove(kwargs, is_add):
     files = kwargs.pop('files')
     all_files = []
     map(lambda f: all_files.extend(fsutils.get_all_files(f)), files)
+    all_files = map(lambda f: os.path.expanduser(os.path.expandvars(f)), all_files)
 
     action = "add" if is_add else "remove"
     func = flotdiles.add_flotdile if is_add else flotdiles.remove_flotdile
 
-    print("Attempting to %s %d file(s)" % (action, len(files)))
+    print("Attempting to %s %d file(s)" % (action, len(all_files)))
 
     map(func, all_files)
 

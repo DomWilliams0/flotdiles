@@ -53,8 +53,8 @@ class Flotdiles:
             print("Skipping '%s', as it doesn't exist" % f)
             return
 
-        if not os.path.isfile(f):
-            print("Skipping '%s', as it isn't a file")
+        if not os.path.isfile(f) or os.path.islink(f):
+            print("Skipping '%s', as it isn't a file" % f)
             return
 
         filename = os.path.basename(f)
