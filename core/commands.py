@@ -4,6 +4,7 @@ from core import fsutils
 from core.flotdiles import Flotdiles
 
 flotdiles = Flotdiles()
+should_save = True
 
 
 def handle_command(kwargs):
@@ -20,7 +21,8 @@ def handle_command(kwargs):
     else:
         raise StandardError("Unknown command '%s'" % cmd)
 
-    flotdiles.save()
+    if should_save:
+        flotdiles.save()
 
 
 def handle_add_remove(kwargs, is_add):
@@ -73,3 +75,7 @@ def handle_sync(kwargs):
 
     func = fsutils.push if push else fsutils.pull
     func(flotdiles.path, force)
+
+    if pull:
+        global should_save
+        should_save = False
