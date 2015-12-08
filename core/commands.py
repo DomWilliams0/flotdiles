@@ -47,9 +47,9 @@ def handle_list(kwargs):
     print("Showing %d synced files: " % len(files))
 
     print(":-------")
-    for f in files:
-        print(": SRC -> %s" % f["flotdile"])
-        print(": LOC -> %s" % f["dotfile"])
+    for src, loc in files.items():
+        print(": SRC -> %s" % src)
+        print(": LOC -> %s" % loc)
         print(":-------")
 
 

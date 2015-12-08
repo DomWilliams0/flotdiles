@@ -91,41 +91,43 @@ class Flotdiles:
         if not os.path.islink(f):
             raise StandardError("as it isn't a flotdile symlink")
 
-        flotdile_results = filter(lambda x: x["dotfile"] == f, self.get_synced_files())
+        flotdile = self.get_synced_files().get(f)
 
-        if len(flotdile_results) == 0:
+        if flotdile is None:
             raise StandardError("as it isn't a flotdile")
-
-        if len(flotdile_results) != 1:
-            raise StandardError("as it...what? There are multiple flotdiles linking to this single file. WAT?")
-
-        src = flotdile_results[0]["flotdile"]
 
         # replace symlink with original
         os.remove(f)
-        shutil.move(src, f)
+        shutil.move(flotdile, f)
 
         self._remove_synced_file(f)
 
     def get_synced_files(self):
-        return self._config.get(self._SYNCED_FILE_KEY, [])
+        return self._config.get(self._SYNCED_FILE_KEY, {})
 
     def _add_synced_file(self, flotdile, dotfile):
-        all_synced = self.get_synced_files()
-        all_synced.append({
-            "flotdile": flotdile,
-            "dotfile": dotfile
-        })
+        synced = self.get_synced_files()
+        if dotfile in synced:
+            raise StandardError("as there is already a flotdile for this file")
 
-        self._config[self._SYNCED_FILE_KEY] = all_synced
+        synced[dotfile] = flotdile
+
+        self._update_synced_files(synced)
 
         print("Added flotdile for %s" % dotfile)
 
     def _remove_synced_file(self, dotfile):
-        new_synced = filter(lambda x: x["dotfile"] != dotfile, self.get_synced_files())
-        self._config[self._SYNCED_FILE_KEY] = new_synced
+        synced = self.get_synced_files()
+        if dotfile not in synced:
+            raise StandardError("as there is not already a flotdile for this file")
+
+        del synced[dotfile]
+        self._update_synced_files(synced)
 
         print("Removed flotdile for %s" % dotfile)
+
+    def _update_synced_files(self, new_dict):
+        self._config[self._SYNCED_FILE_KEY] = new_dict
 
     def save(self):
         with open(os.path.join(self.path, self.CONFIG_FILE), 'w') as config:
