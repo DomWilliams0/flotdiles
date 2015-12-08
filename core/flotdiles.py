@@ -142,5 +142,6 @@ class Flotdiles:
         i = 0
         while os.path.exists(new_path):
             new_path = "%s.fd%d" % (path, i)
+            i += 1
 
         return new_path
