@@ -63,7 +63,8 @@ def handle_sync(kwargs):
     # validate
     if push == pull:
         if not push:
-            push = True  # default
+            # todo pretty argument error catching
+            raise StandardError("You must specify if you want to push or pull with --push or --pull")
         else:
             raise StandardError("Push OR pull, not both!")
 
