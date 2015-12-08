@@ -39,9 +39,14 @@ def handle_remove(kwargs):
 
 
 def handle_list(kwargs):
-    # todo list
-    print("Listing files")
-    print(flotdiles.get_synced_files())
+    files = flotdiles.get_synced_files()
+    print("Showing %d synced files: " % len(files))
+
+    print(":-------")
+    for f in files:
+        print(": SRC -> %s" % f["flotdile"])
+        print(": LOC -> %s" % f["dotfile"])
+        print(":-------")
 
 
 def handle_sync(kwargs):
