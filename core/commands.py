@@ -39,6 +39,11 @@ def handle_add_remove(kwargs, is_add):
 
 def handle_list(kwargs):
     files = flotdiles.get_synced_files()
+
+    if not files:
+        print("There are no synced files")
+        return
+
     print("Showing %d synced files: " % len(files))
 
     print(":-------")
