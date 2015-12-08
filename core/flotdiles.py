@@ -42,6 +42,18 @@ class Flotdiles:
     # operations
 
     def add_flotdile(self, f):
+        return self._do_flotdile_operation(f, True)
+
+    def remove_flotdile(self, f):
+        return self._do_flotdile_operation(f, False)
+
+    def _do_flotdile_operation(self, f, is_add):
+        try:
+            return self._add_flotdile(f) if is_add else self._remove_flotdile(f)
+        except StandardError as e:
+            print("Skipping '%s' %s" % (f, e.message))
+
+    def _add_flotdile(self, f):
         """
         Adds a flotdile for the given file, by replacing it with a symlink to the flotdile directory
 
@@ -50,12 +62,10 @@ class Flotdiles:
         f = os.path.abspath(f)
 
         if not os.path.exists(f):
-            print("Skipping '%s', as it doesn't exist" % f)
-            return
+            raise StandardError("as it doesn't exist")
 
         if not os.path.isfile(f) or os.path.islink(f):
-            print("Skipping '%s', as it isn't a file" % f)
-            return
+            raise StandardError("as it isn't a file")
 
         filename = os.path.basename(f)
         new_path = self.ensure_unique_file(os.path.join(self.path, filename))
@@ -67,7 +77,7 @@ class Flotdiles:
         # add to config
         self._add_synced_file(new_path, f)
 
-    def remove_flotdile(self, f):
+    def _remove_flotdile(self, f):
         """
         Removes the given file from the flotdiles, by replacing its symlink with the original file
 
@@ -76,22 +86,18 @@ class Flotdiles:
         f = os.path.abspath(f)
 
         if not os.path.exists(f):
-            print("Skipping '%s', as it doesn't exist" % f)
-            return
+            raise StandardError("as it doesn't exist")
 
         if not os.path.islink(f):
-            print("Skipping '%s', as it isn't a flotdile symlink")
-            return
+            raise StandardError("as it isn't a flotdile symlink")
 
         flotdile_results = filter(lambda x: x["dotfile"] == f, self.get_synced_files())
 
         if len(flotdile_results) == 0:
-            print("Skipping '%s', as it isn't a flotdile")
-            return
+            raise StandardError("as it isn't a flotdile")
 
         if len(flotdile_results) != 1:
-            print("What? There are multiple flotdiles linking to this single file. WAT?")
-            return
+            raise StandardError("as it...what? There are multiple flotdiles linking to this single file. WAT?")
 
         src = flotdile_results[0]["flotdile"]
 
