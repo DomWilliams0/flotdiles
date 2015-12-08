@@ -42,10 +42,12 @@ class Flotdiles:
     # operations
 
     def add_file(self, f):
+        f = os.path.abspath(f)
+
         if not os.path.exists(f):
             print("Skipping '%s', as it doesn't exist" % f)
+            return
 
-        f = os.path.abspath(f)
         filename = os.path.basename(f)
         new_path = self.ensure_unique_file(os.path.join(self.path, filename))
 
