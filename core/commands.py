@@ -65,5 +65,9 @@ def handle_sync(kwargs):
         else:
             raise StandardError("Push OR pull, not both!")
 
+    # no git repo
+    if not fsutils.is_git_repo(flotdiles.path):
+        raise StandardError("flotdiles directory is not a git repository")
+
     # todo sync
     print("Sync %sing%s" % ("push" if push else "pull", " forcefully" if force else ""))
