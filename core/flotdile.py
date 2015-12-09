@@ -129,6 +129,28 @@ class Flotdiles:
     def _update_synced_files(self, new_dict):
         self._config[self._SYNCED_FILE_KEY] = new_dict
 
+    def verify(self):
+        files = self.get_synced_files()
+        for src, link in files.items():
+            try:
+                # check existence
+                if not os.path.exists(src):
+                    raise InvalidFlotdile(src, "File not found in flotdile directory")
+                if not os.path.exists(link):
+                    raise InvalidFlotdile(link, "Symlink not found")
+
+                    # todo check for newer file in place of link and update self
+            except InvalidFlotdile as e:
+                print("Invalid flotdile, removing: " + e.message)
+
+                # replace link with file
+                if os.path.exists(link):
+                    os.remove(link)
+                if os.path.exists(src):
+                    shutil.move(src, link)
+
+                self._remove_synced_file(src)
+
     def save(self):
         with open(os.path.join(self.path, self.CONFIG_FILE), 'w') as config:
             json.dump(self._config, config, indent=4)
@@ -149,3 +171,8 @@ class Flotdiles:
 
 class SkippedFileError(RuntimeError):
     pass
+
+
+class InvalidFlotdile(RuntimeError):
+    def __init__(self, f, msg):
+        RuntimeError.__init__(self, "%s (%s)" % (msg, f))

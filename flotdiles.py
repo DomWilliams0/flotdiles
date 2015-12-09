@@ -30,6 +30,8 @@ def main():
     sync.add_argument("--pull", help="Pull changes to repository", action='store_true', default=argparse.SUPPRESS)
     sync.add_argument("-f", "--force", help="Force sync, you savage", action='store_true', default=False)
 
+    verify = subparsers.add_parser("verify", help="Verify all flotdiles and remove invalid links")
+
     args = parser.parse_args()
 
     core.commands.handle_command(vars(args))

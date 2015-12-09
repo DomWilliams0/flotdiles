@@ -20,6 +20,8 @@ def handle_command(kwargs):
             handle_list(kwargs)
         elif cmd == 'sync':
             handle_sync(kwargs)
+        elif cmd == 'verify':
+            handle_verify(kwargs)
         else:
             raise CommandError("Unknown command '%s'" % cmd)
 
@@ -85,6 +87,13 @@ def handle_sync(kwargs):
     if pull:
         global should_save
         should_save = False
+
+        flotdiles.verify()
+
+
+def handle_verify(kwargs):
+    print("Verifying flotdiles")
+    flotdiles.verify()
 
 
 class CommandError(RuntimeError):
