@@ -1,6 +1,6 @@
 import argparse
 
-from core import commands
+import core
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
 
     args = parser.parse_args()
 
-    commands.handle_command(vars(args))
+    core.commands.handle_command(vars(args))
 
 
 if __name__ == "__main__":

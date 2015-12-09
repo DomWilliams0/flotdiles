@@ -1,7 +1,7 @@
 import os
 
 from core import fsutils
-from core.flotdiles import Flotdiles
+from core.flotdile import Flotdiles
 
 flotdiles = Flotdiles()
 should_save = True
