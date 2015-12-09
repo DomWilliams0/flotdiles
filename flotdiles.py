@@ -1,12 +1,20 @@
 #!/usr/bin/env python2
 
 import argparse
+import sys
 
 import core
 
 
+class FlotdileParser(argparse.ArgumentParser):
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="flotdiles")
+    parser = FlotdileParser(description="flotdiles")
     subparsers = parser.add_subparsers(dest="subcommand")
 
     add = subparsers.add_parser("add", help="Add files and directories")
