@@ -14,7 +14,7 @@ class FlotdileParser(argparse.ArgumentParser):
 
 
 def main():
-    parser = FlotdileParser(description="flotdiles")
+    parser = FlotdileParser(description="flotdiles: A dotfile and not-quite-dotfile management system")
     subparsers = parser.add_subparsers(dest="subcommand")
 
     add = subparsers.add_parser("add", help="Add files and directories")
