@@ -67,6 +67,9 @@ class Flotdiles:
         if not os.path.isfile(f) or os.path.islink(f):
             raise SkippedFileError("as it isn't a file")
 
+        if self.path in f:
+            raise SkippedFileError("as it is a flotdile")
+
         filename = os.path.basename(f)
         new_path = self.ensure_unique_file(os.path.join(self.path, filename))
 
