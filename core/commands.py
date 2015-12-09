@@ -34,9 +34,18 @@ def handle_command(kwargs):
 
 def handle_add_remove(kwargs, is_add):
     files = kwargs.pop('files')
+    remove_all = kwargs.get('all', False)
+
+    if not is_add and not files and not remove_all:
+        raise CommandError("No files specified! Use -A or specify files manually")
+
     all_files = []
-    map(lambda f: all_files.extend(fsutils.get_all_files(f)), files)
-    all_files = map(lambda f: os.path.expanduser(os.path.expandvars(f)), all_files)
+
+    if not is_add and remove_all:
+        all_files = flotdiles.get_synced_files().keys()
+    else:
+        map(lambda f: all_files.extend(fsutils.get_all_files(f)), files)
+        all_files = map(lambda f: os.path.expanduser(os.path.expandvars(f)), all_files)
 
     action = "add" if is_add else "remove"
     func = flotdiles.add_flotdile if is_add else flotdiles.remove_flotdile

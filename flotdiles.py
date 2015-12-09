@@ -21,7 +21,8 @@ def main():
     add.add_argument("files", nargs="+", help="The files/directories to add")
 
     rem = subparsers.add_parser("remove", help="Remove files and directories")
-    rem.add_argument("files", nargs="+", help="The files/directories to remove")
+    rem.add_argument("files", nargs="*", help="The files/directories to remove")
+    rem.add_argument("-A", "--all", help="Remove ALL files", action='store_true', dest='all')
 
     list = subparsers.add_parser("list", help="List the synced files")
 
