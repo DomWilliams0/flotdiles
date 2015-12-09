@@ -1,5 +1,5 @@
 # flotdiles
-A dotfile and not-quite-dotfile management system
+A python dotfile and not-quite-dotfile management system with no dependencies.
 
 ## Usage
 * Clone/create your dotfiles git repository in `~/.flotdiles`, then use any `flotdiles` command to create the config.
