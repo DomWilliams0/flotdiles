@@ -160,10 +160,18 @@ class Flotdiles:
 
     @staticmethod
     def ensure_unique_file(path):
-        if not os.path.exists(path):
-            return path
 
-        new_path = path
+        # remove dot, for ease of listing
+        filename = os.path.basename(path)
+        if filename.startswith('.'):
+            new_parent = os.path.sep.join(os.path.split(path)[:-1])
+            new_path = os.path.join(new_parent, filename[1:])
+        else:
+            new_path = path
+
+        if not os.path.exists(new_path):
+            return new_path
+
         i = 0
         while os.path.exists(new_path):
             new_path = "%s.fd%d" % (path, i)
