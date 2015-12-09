@@ -3,6 +3,8 @@ import os
 import re
 import shutil
 
+import errno
+
 
 class Flotdiles:
     DIR_NAME = '.flotdiles'
@@ -136,25 +138,34 @@ class Flotdiles:
 
     def verify(self):
         files = self.get_synced_files()
-        for src, link in files.items():
+        for fdlink, fileloc in files.items():
             try:
                 # check existence
-                if not os.path.exists(src):
-                    raise InvalidFlotdile(src, "File not found in flotdile directory")
-                if not os.path.exists(link):
-                    raise InvalidFlotdile(link, "Symlink not found")
+                if not os.path.exists(fileloc):
+                    raise InvalidFlotdile(fdlink, "File not found in flotdile directory")
+                if not os.path.exists(fdlink) or not os.path.islink(fdlink):
+                    try:
+                        parent = os.path.normpath(os.path.join(fdlink, os.path.pardir))
+                        os.makedirs(parent)
+                    except OSError as e:
+                        if e.errno != errno.EEXIST:
+                            raise e
+                    if os.path.exists(fdlink):
+                        os.remove(fdlink)
+                    os.symlink(fileloc, fdlink)
+                    print("Replacing '%s' with a symlink to flotdiles" % fdlink)
 
                     # todo check for newer file in place of link and update self
             except InvalidFlotdile as e:
                 print("Invalid flotdile, removing: " + e.message)
 
                 # replace link with file
-                if os.path.exists(link):
-                    os.remove(link)
-                if os.path.exists(src):
-                    shutil.move(src, link)
+                if os.path.exists(fileloc):
+                    os.remove(fileloc)
+                if os.path.exists(fdlink):
+                    shutil.move(fdlink, fileloc)
 
-                self._remove_synced_file(src)
+                self._remove_synced_file(fdlink)
 
     def save(self):
         with open(os.path.join(self.path, self.CONFIG_FILE), 'w') as config:
