@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 
 
@@ -8,6 +9,7 @@ class Flotdiles:
     CONFIG_FILE = 'flotdiles.conf'
 
     _SYNCED_FILE_KEY = "synced-files"
+    _UNIQUE_REGEX = re.compile("(.+)\.fd(\d+)$")
 
     def __init__(self):
         self.path = os.path.join(os.environ["HOME"], self.DIR_NAME)
@@ -165,14 +167,14 @@ class Flotdiles:
         filename = os.path.basename(path)
         if filename.startswith('.'):
             new_parent = os.path.sep.join(os.path.split(path)[:-1])
-            new_path = os.path.join(new_parent, filename[1:])
-        else:
-            new_path = path
+            filename = filename[1:]
+            path = os.path.join(new_parent, filename)
 
-        if not os.path.exists(new_path):
-            return new_path
+        if not os.path.exists(path):
+            return path
 
         i = 0
+        new_path = path
         while os.path.exists(new_path):
             new_path = "%s.fd%d" % (path, i)
             i += 1
