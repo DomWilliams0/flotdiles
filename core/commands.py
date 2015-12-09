@@ -10,19 +10,24 @@ should_save = True
 def handle_command(kwargs):
     cmd = kwargs.pop('subcommand')
 
-    if cmd == 'add':
-        handle_add_remove(kwargs, True)
-    elif cmd == "remove":
-        handle_add_remove(kwargs, False)
-    elif cmd == "list":
-        handle_list(kwargs)
-    elif cmd == 'sync':
-        handle_sync(kwargs)
-    else:
-        raise StandardError("Unknown command '%s'" % cmd)
+    try:
 
-    if should_save:
-        flotdiles.save()
+        if cmd == 'add':
+            handle_add_remove(kwargs, True)
+        elif cmd == "remove":
+            handle_add_remove(kwargs, False)
+        elif cmd == "list":
+            handle_list(kwargs)
+        elif cmd == 'sync':
+            handle_sync(kwargs)
+        else:
+            raise CommandError("Unknown command '%s'" % cmd)
+
+        if should_save:
+            flotdiles.save()
+
+    except CommandError as e:
+        print("UH OH: " + e.message)
 
 
 def handle_add_remove(kwargs, is_add):
@@ -64,13 +69,13 @@ def handle_sync(kwargs):
     if push == pull:
         if not push:
             # todo pretty argument error catching
-            raise StandardError("You must specify if you want to push or pull with --push or --pull")
+            raise CommandError("You must specify if you want to push or pull with --push or --pull")
         else:
-            raise StandardError("Push OR pull, not both!")
+            raise CommandError("Push OR pull, not both!")
 
     # no git repo
     if not fsutils.is_git_repo(flotdiles.path):
-        raise StandardError("flotdiles directory is not a git repository")
+        raise CommandError("flotdiles directory is not a git repository")
 
     print("Attempting to %s%s" % ("push" if push else "pull", " forcefully" if force else ""))
 
@@ -80,3 +85,7 @@ def handle_sync(kwargs):
     if pull:
         global should_save
         should_save = False
+
+
+class CommandError(RuntimeError):
+    pass
