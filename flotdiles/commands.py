@@ -1,6 +1,7 @@
 import os
-from flotdile import Flotdiles
+
 import fsutils
+from flotdile import Flotdiles
 
 flotdiles = Flotdiles()
 should_save = True
@@ -21,6 +22,8 @@ def handle_command(kwargs):
             handle_sync(kwargs)
         elif cmd == 'verify':
             handle_verify(kwargs)
+        elif cmd == 'status':
+            handle_status(kwargs)
         else:
             raise CommandError("Unknown command '%s'" % cmd)
 
@@ -102,6 +105,11 @@ def handle_sync(kwargs):
 def handle_verify(kwargs):
     print("Verifying flotdiles")
     flotdiles.verify()
+
+
+def handle_status(kwargs):
+    for cmd in ("git fetch origin", "git status"):
+        fsutils.execute_cmd(cmd, False, flotdiles.path)
 
 
 class CommandError(RuntimeError):

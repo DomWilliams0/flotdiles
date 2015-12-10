@@ -17,3 +17,4 @@ A python dotfile and not-quite-dotfile management system with no dependencies.
    * `--push` to push all your local changes
    * `--push -f` to *force* push all your local changes to overwrite the remote version, you savage. 
 * Validate your flotdiles with `flotdiles verify`. This will create and delete invalid symlinks. 
+* View differences between your local and remote flotdiles with `flotdiles.py status`

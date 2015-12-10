@@ -33,6 +33,8 @@ def main():
 
     verify = subparsers.add_parser("verify", help="Verify all flotdiles and remove invalid links")
 
+    status = subparsers.add_parser("status", help="View status of flotdiles status compared to remote repository")
+
     args = parser.parse_args()
 
     flotdiles.commands.handle_command(vars(args))
