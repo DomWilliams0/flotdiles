@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-import flotdiles
+from core import commands
 
 
 class FlotdileParser(argparse.ArgumentParser):
@@ -37,7 +37,7 @@ def main():
 
     args = parser.parse_args()
 
-    flotdiles.commands.handle_command(vars(args))
+    commands.handle_command(vars(args))
 
 
 if __name__ == "__main__":
