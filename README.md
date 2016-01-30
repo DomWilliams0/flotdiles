@@ -3,7 +3,7 @@ A python dotfile and not-quite-dotfile management system with no dependencies.
 
 ## Installation
 ### If you have access to root
-* Download and execute the install script as root, eg. `wget https://raw.githubusercontent.com/DomWilliams0/flotdiles/master/install.sh`
+* Download and execute the install script as root, eg. `curl -s https://raw.githubusercontent.com/DomWilliams0/flotdiles/master/install.sh | sudo sh`
 * Use the `flotdiles` command from anywhere!
 * Use `install.sh uninstall` to uninstall. 
 
